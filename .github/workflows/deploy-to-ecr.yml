@@ -39,7 +39,7 @@ jobs:
 
       - name: Terraform Apply
         id: apply
-        run: terraform apply -auto-approve -input=false -var="aws_region=${{ env.AWS_REGION }}"
+        run: terraform apply -auto-approve -input=false -var="AWS_REGION=${{ env.AWS_REGION }}"
         working-directory: ./terraform
 
       - name: Get ECR Repository URL
