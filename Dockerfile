@@ -2,12 +2,14 @@ FROM node:24-slim
 
 WORKDIR /usr/src/app
 
-COPY package*.json ./
+COPY app/package*.json ./
 
 RUN yarn install --production
 
-COPY . .
+COPY app/ ./
 
 EXPOSE 3011
 
-CMD [ "yarn", "start" ]
+ENV NODE_ENV=development
+
+CMD ["yarn", "start"]

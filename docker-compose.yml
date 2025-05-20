@@ -1,0 +1,12 @@
+version: '3.8'
+services:
+  app:
+    container_name: poc-hello-world
+    image: poc-hello-world
+    build:
+      context: './backend'
+      dockerfile: Dockerfile
+    ports:
+      - '3011:3011'
+    environment:
+      - NODE_ENV=development

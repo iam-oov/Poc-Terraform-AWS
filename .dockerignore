@@ -1,0 +1,9 @@
+.env
+.gitignore
+
+.github/
+terraform/
+iac/
+
+README.md
+LICENSE
