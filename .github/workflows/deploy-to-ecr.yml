@@ -7,7 +7,6 @@ on:
 
 env:
   AWS_REGION: ${{ secrets.AWS_REGION }}
-  AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
   AWS_IAM_ROLE_ARN: ${{ secrets.AWS_IAM_ROLE_ARN }}
 
 jobs:
@@ -25,7 +24,7 @@ jobs:
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: arn:aws:iam::${{ env.AWS_ACCOUNT_ID }}:role/${{ env.AWS_IAM_ROLE_ARN }}
+          role-to-assume: ${{ env.AWS_IAM_ROLE_ARN }}
           aws-region: ${{ env.AWS_REGION }}
 
       - name: Setup Terraform
@@ -63,7 +62,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: . # El contexto de build es la raíz del repositorio
-          dockerfile: Dockerfile # Ruta al Dockerfile
+          file: ./Dockerfile # Ruta al Dockerfile
           push: true
           tags:
             ${{ env.ECR_REPOSITORY_URL }}:latest # Usa la URL del repo ECR obtenida de Terraform
