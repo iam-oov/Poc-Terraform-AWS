@@ -27,14 +27,6 @@ jobs:
           role-to-assume: ${{ env.AWS_IAM_ROLE_ARN }}
           aws-region: ${{ env.AWS_REGION }}
 
-      - name: Debug AWS Environment Variables Set by configure-aws-credentials
-        run: |
-          echo "Value of AWS_REGION env var: '${AWS_REGION}'"
-          echo "Value of AWS_DEFAULT_REGION env var: '${AWS_DEFAULT_REGION}'"
-          echo "--- All AWS related env vars ---"
-          printenv | grep AWS_
-            echo "--------------------------------"
-
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
         with:
@@ -52,79 +44,22 @@ jobs:
           terraform apply -auto-approve -input=false -var="AWS_REGION=${{ env.AWS_REGION }}"
         working-directory: ./terraform
 
-      # - name: Get ECR Repository URL
-      #   id: get_ecr_url
-      #   run: echo "ECR_REPOSITORY_URL=$(terraform output -raw ecr_repository_url)" >> $GITHUB_ENV
-      #   working-directory: ./terraform
-
-      - name: Get Terraform Outputs (ECR URL and AWS Region)
-        id: get_tf_outputs
+      - name: Get ECR Repository URL
+        id: get_ecr_url
+        run: echo "ECR_REPOSITORY_URL=$(terraform output -raw ecr_repository_url)" >> $GITHUB_ENV
         working-directory: ./terraform
-        run: |
-          echo "INFO: Attempting to get ECR repository URL from Terraform output..."
-          TF_OUTPUT_ECR_URL=$(terraform output -raw ecr_repository_url)
-          echo "DEBUG: Raw output for 'ecr_repository_url' (value in variable, may be masked by GHA logger when printed):"
-          echo "--------------------------------------------------"
-          echo "${TF_OUTPUT_ECR_URL}"
-          echo "--------------------------------------------------"
-
-          if [[ "${TF_OUTPUT_ECR_URL}" == *"***"* ]]; then
-            echo "::warning title=Problematic ECR URL::The ECR Repository URL from Terraform output appears to contain literal '***'. This is unexpected if GHA logger masking is the cause."
-          else
-            echo "INFO: The ECR Repository URL (internal value) does not seem to contain literal '***'."
-          fi
-
-          echo "INFO: Setting GITHUB_ENV variable ECR_REPOSITORY_URL..."
-          echo "ECR_REPOSITORY_URL=${TF_OUTPUT_ECR_URL}" >> $GITHUB_ENV
-          echo "INFO: ECR_REPOSITORY_URL has been set."
-
-          echo "INFO: Attempting to get configured AWS region from Terraform output..."
-          TF_OUTPUT_AWS_REGION=$(terraform output -raw aws_region_configured)
-          echo "DEBUG: Raw output for 'aws_region_configured' (this is var.AWS_REGION in Terraform):"
-          echo "--------------------------------------------------"
-          echo "Value: '${TF_OUTPUT_AWS_REGION}'" # Encapsulado en comillas para ver espacios
-          echo "--------------------------------------------------"
-
-          if [ -z "${TF_OUTPUT_AWS_REGION}" ]; then
-            echo "::error title=Terraform AWS Region Empty::Terraform output for 'aws_region_configured' was empty."
-          elif [[ "${TF_OUTPUT_AWS_REGION}" == *"***"* ]]; then
-             echo "::warning title=Problematic AWS Region Output::Terraform output for 'aws_region_configured' contains '***'. This is unexpected."
-          else
-            echo "INFO: AWS Region configured in Terraform is: '${TF_OUTPUT_AWS_REGION}'"
-          fi
-
-      - name: Debug AWS Environment Variables Set by configure-aws-credentials
-        run: |
-          echo "Value of AWS_REGION env var: '${AWS_REGION}'" # Será enmascarado
-          echo "Value of AWS_DEFAULT_REGION env var: '${AWS_DEFAULT_REGION}'" # Será enmascarado
-          echo "--- All AWS related env vars ---"
-          printenv | grep AWS_
-            echo "--------------------------------"
-            echo "Attempting AWS CLI call with detected AWS_REGION..."
-            if [ -n "$AWS_REGION" ]; then
-              # Intenta una llamada simple que use la región. El output se enmascarará si es sensible.
-              aws sts get-caller-identity --region "$AWS_REGION" --output text
-              if [ $? -ne 0 ]; then
-                echo "::error::AWS CLI call FAILED using AWS_REGION: $AWS_REGION (valor real enmascarado si es sensible)"
-              else
-                echo "::notice::AWS CLI call SUCCEEDED using AWS_REGION: $AWS_REGION (valor real enmascarado si es sensible)"
-              fi
-            else
-              echo "::warning::AWS_REGION environment variable is not set or empty."
-            fi
 
       - name: Login to Amazon ECR
         id: login-ecr
         uses: docker/login-action@v3
         with:
           registry: ${{ env.ECR_REPOSITORY_URL }}
-          # ecr: true
 
       - name: Build, tag, and push image to Amazon ECR
         id: build-image
         uses: docker/build-push-action@v5
         with:
-          context: . # El contexto de build es la raíz del repositorio
-          file: ./Dockerfile # Ruta al Dockerfile
+          context: .
+          file: ./Dockerfile
           push: true
-          tags: ${{ env.ECR_REPOSITORY_URL }}:latest # Usa la URL del repo ECR obtenida de Terraform
+          tags: ${{ env.ECR_REPOSITORY_URL }}:latest
