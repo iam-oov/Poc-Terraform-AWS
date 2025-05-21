@@ -6,6 +6,12 @@
 
 Construido con ❤️ por [Valdo](https://github.com/iam-oov) usando Windsurf, Gemini y el conocimiento adquirido en el curso de Udemy "[Terraform, a popular infrastructure automation tool for DevOps. Terraform with AWS, Packer, Docker, ECS, EKS, Jenkins](https://www.udemy.com/course/learn-devops-infrastructure-automation-with-terraform/)".
 
+## ToDo
+
+- Separar los archivos tf usando modulos para ambientes STAGE y PROD
+- Agregar un job para diferentes ramas STAGE y PROD
+- Activar el job de PROD solo en PR de main
+
 # POC: Node.js to AWS ECR with Terraform & GitHub Actions
 
 This project serves as a Proof of Concept (PoC) demonstrating the deployment of a Node.js (Express) backend application, containerized with Docker, to Amazon Elastic Container Registry (ECR) using Terraform for infrastructure provisioning and GitHub Actions for CI/CD automation.
