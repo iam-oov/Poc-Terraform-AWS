@@ -8,6 +8,8 @@ on:
 env:
   AWS_REGION: ${{ secrets.AWS_REGION }}
   AWS_IAM_ROLE_ARN: ${{ secrets.AWS_IAM_ROLE_ARN }}
+  TERRAFORM_DIR: ./01-tf
+  TERRAFORM_VERSION: '1.12.0'
 
 jobs:
   deploy:
@@ -30,24 +32,24 @@ jobs:
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
         with:
-          terraform_version: '1.12.0'
+          terraform_version: ${{ env.TERRAFORM_VERSION }}
 
       - name: Terraform Init
         id: init
         run: terraform init -input=false
-        working-directory: ./terraform
+        working-directory: ${{ env.TERRAFORM_DIR }}
 
       - name: Terraform Apply
         id: apply
         run: |
           echo "O_AWS_REGION=${{ env.AWS_REGION }}"
           terraform apply -auto-approve -input=false -var="AWS_REGION=${{ env.AWS_REGION }}"
-        working-directory: ./terraform
+        working-directory: ${{ env.TERRAFORM_DIR }}
 
       - name: Get ECR Repository URL
         id: get_ecr_url
         run: echo "ECR_REPOSITORY_URL=$(terraform output -raw ecr_repository_url)" >> $GITHUB_ENV
-        working-directory: ./terraform
+        working-directory: ${{ env.TERRAFORM_DIR }}
 
       - name: Login to Amazon ECR
         id: login-ecr
