@@ -8,6 +8,7 @@ Construido con ❤️ por [Valdo](https://github.com/iam-oov) usando Windsurf, G
 
 ## ToDo
 
+- Agregar ECS a los archivos de terraform
 - Separar los archivos tf usando modulos para ambientes STAGE y PROD
 - Agregar un job para diferentes ramas STAGE y PROD
 - Activar el job de PROD solo en PR de main
