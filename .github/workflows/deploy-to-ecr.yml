@@ -55,9 +55,7 @@ jobs:
         id: login-ecr
         uses: docker/login-action@v3
         with:
-          ecr:
-            true # Usa automáticamente las credenciales de AWS configuradas en el paso anterior
-            # y se loguea en el registro ECR para la AWS_REGION especificada.
+          ecr: true
 
       - name: Build, tag, and push image to Amazon ECR
         id: build-image
@@ -66,6 +64,4 @@ jobs:
           context: . # El contexto de build es la raíz del repositorio
           file: ./Dockerfile # Ruta al Dockerfile
           push: true
-          tags:
-            ${{ env.ECR_REPOSITORY_URL }}:latest # Usa la URL del repo ECR obtenida de Terraform
-            # ej: 123456789012.dkr.ecr.us-east-1.amazonaws.com/poc-hello-world-app:latest
+          tags: ${{ env.ECR_REPOSITORY_URL }}:latest # Usa la URL del repo ECR obtenida de Terraform
