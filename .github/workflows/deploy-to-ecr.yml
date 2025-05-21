@@ -93,11 +93,32 @@ jobs:
             echo "INFO: AWS Region configured in Terraform is: '${TF_OUTPUT_AWS_REGION}'"
           fi
 
+      - name: Debug AWS Environment Variables Set by configure-aws-credentials
+        run: |
+          echo "Value of AWS_REGION env var: '${AWS_REGION}'" # Será enmascarado
+          echo "Value of AWS_DEFAULT_REGION env var: '${AWS_DEFAULT_REGION}'" # Será enmascarado
+          echo "--- All AWS related env vars ---"
+          printenv | grep AWS_
+            echo "--------------------------------"
+            echo "Attempting AWS CLI call with detected AWS_REGION..."
+            if [ -n "$AWS_REGION" ]; then
+              # Intenta una llamada simple que use la región. El output se enmascarará si es sensible.
+              aws sts get-caller-identity --region "$AWS_REGION" --output text
+              if [ $? -ne 0 ]; then
+                echo "::error::AWS CLI call FAILED using AWS_REGION: $AWS_REGION (valor real enmascarado si es sensible)"
+              else
+                echo "::notice::AWS CLI call SUCCEEDED using AWS_REGION: $AWS_REGION (valor real enmascarado si es sensible)"
+              fi
+            else
+              echo "::warning::AWS_REGION environment variable is not set or empty."
+            fi
+
       - name: Login to Amazon ECR
         id: login-ecr
         uses: docker/login-action@v3
         with:
-          ecr: true
+          registry: ${{ env.ECR_REPOSITORY_URL }}
+          # ecr: true
 
       - name: Build, tag, and push image to Amazon ECR
         id: build-image
