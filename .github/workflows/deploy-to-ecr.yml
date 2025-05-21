@@ -44,12 +44,49 @@ jobs:
           terraform apply -auto-approve -input=false -var="AWS_REGION=${{ env.AWS_REGION }}"
         working-directory: ./terraform
 
-      - name: Get ECR Repository URL
+      # - name: Get ECR Repository URL
+      #   id: get_ecr_url
+      #   run: echo "ECR_REPOSITORY_URL=$(terraform output -raw ecr_repository_url)" >> $GITHUB_ENV
+      #   working-directory: ./terraform
+
+      - name: Get ECR Repository URL and Add Debug Logs
         id: get_ecr_url
-        run: echo "ECR_REPOSITORY_URL=$(terraform output -raw ecr_repository_url)" >> $GITHUB_ENV
-        working-directory: ./terraform
-        # Esto hace que ECR_REPOSITORY_URL esté disponible como una variable de entorno (env.ECR_REPOSITORY_URL)
-        # para los pasos siguientes.
+        working-directory: ./terraform # Asegúrate de que esta es la ruta correcta a tu directorio de Terraform
+        run: |
+          echo "INFO: Current directory is $(pwd)"
+          echo "INFO: Listing Terraform files in working directory:"
+          ls -la
+
+          echo "INFO: Attempting to get ECR repository URL from Terraform output..."
+          # Captura la salida en una variable para poder inspeccionarla y usarla
+          TF_OUTPUT_ECR_URL=$(terraform output -raw ecr_repository_url)
+
+          echo "DEBUG: Raw output from 'terraform output -raw ecr_repository_url' is:"
+          echo "--------------------------------------------------"
+          echo "${TF_OUTPUT_ECR_URL}"
+          echo "--------------------------------------------------"
+
+          # Verifica si la salida está vacía
+          if [ -z "${TF_OUTPUT_ECR_URL}" ]; then
+            echo "::error title=Terraform Output Empty::Terraform output for 'ecr_repository_url' was empty. Please check your Terraform configuration and ensure the output value 'ecr_repository_url' is correctly defined and populated after 'terraform apply'."
+            # Opcionalmente, puedes hacer que el job falle si esto es crítico
+            # exit 1
+          fi
+
+          # Verifica si la salida contiene "***" lo cual indicaste como un problema
+          if [[ "${TF_OUTPUT_ECR_URL}" == *"***"* ]]; then
+            echo "::warning title=Problematic ECR URL::The ECR Repository URL from Terraform output contains '***'. This usually indicates an issue with region resolution or configuration within your Terraform code."
+            echo "Problematic URL: ${TF_OUTPUT_ECR_URL}"
+          else
+            echo "INFO: The ECR Repository URL obtained seems structurally valid (does not contain '***')."
+          fi
+
+          echo "INFO: Setting GITHUB_ENV variable ECR_REPOSITORY_URL..."
+          echo "ECR_REPOSITORY_URL=${TF_OUTPUT_ECR_URL}" >> $GITHUB_ENV
+          echo "INFO: ECR_REPOSITORY_URL has been set in GITHUB_ENV."
+
+          # Para verificar que se estableció correctamente en GITHUB_ENV (opcional, ya que el siguiente paso lo usará)
+          # echo "Checking env.ECR_REPOSITORY_URL (simulated for next step): $ECR_REPOSITORY_URL"
 
       - name: Login to Amazon ECR
         id: login-ecr
