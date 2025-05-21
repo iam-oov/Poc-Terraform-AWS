@@ -1,3 +1,11 @@
+![Terraform](https://img.shields.io/badge/terraform-%235835CC.svg?style=for-the-badge&logo=terraform&logoColor=white)
+![Docker](https://img.shields.io/badge/docker-%230db7ed.svg?style=for-the-badge&logo=docker&logoColor=white)
+![AWS](https://img.shields.io/badge/AWS-%23FF9900.svg?style=for-the-badge&logo=amazon-aws&logoColor=white)
+![GitHub Actions](https://img.shields.io/badge/github%20actions-%232671E5.svg?style=for-the-badge&logo=githubactions&logoColor=white)
+![Bash Script](https://img.shields.io/badge/bash_script-%23121011.svg?style=for-the-badge&logo=gnu-bash&logoColor=white)
+
+Construido con ❤️ por [Valdo](https://github.com/iam-oov) usando Windsurf, Gemini y el conocimiento adquirido en el curso de Udemy "[Terraform, a popular infrastructure automation tool for DevOps. Terraform with AWS, Packer, Docker, ECS, EKS, Jenkins](https://www.udemy.com/course/learn-devops-infrastructure-automation-with-terraform/)".
+
 # POC: Node.js to AWS ECR with Terraform & GitHub Actions
 
 This project serves as a Proof of Concept (PoC) demonstrating the deployment of a Node.js (Express) backend application, containerized with Docker, to Amazon Elastic Container Registry (ECR) using Terraform for infrastructure provisioning and GitHub Actions for CI/CD automation.
@@ -104,7 +112,7 @@ The `setup_tf_backend.sh` script automates the creation of the S3 bucket and Dyn
     ```
 
 3.  **Run the setup script:**
-    This script will typically run `terraform init` and `terraform apply` against a configuration designed to provision the S3 bucket and DynamoDB table for the state backend. It then uses the outputs to generate `terraform/backend.tf` (and potentially `terraform/variables.tf`).
+    This script will typically run `terraform init` and `terraform apply` against a configuration designed to provision the S3 bucket and DynamoDB table for the state backend. It then uses the outputs to generate `terraform/auto_generated_backend.tf` (and potentially `terraform/auto_generated_variables.tf`).
 
     ```bash
     ./setup_tf_backend.sh
