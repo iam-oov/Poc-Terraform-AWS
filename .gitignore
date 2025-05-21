@@ -13,6 +13,7 @@ override.tf
 override.tf.json
 *_override.tf
 *_override.tf.json
+auto_generated_*.tf
 
 # Docker
 docker-compose.override.yml

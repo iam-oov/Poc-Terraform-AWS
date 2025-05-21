@@ -2,8 +2,8 @@
 .gitignore
 
 .github/
-terraform/
-iac/
+00-tf-infra/
+01-tf/
 
 README.md
 LICENSE
