@@ -113,10 +113,10 @@ The `setup_tf_backend.sh` script automates the creation of the S3 bucket and Dyn
     Follow any prompts from the script.
 
 4.  **Commit and Push Changes:**
-    After the script successfully generates `terraform/backend.tf` and `terraform/variables.tf`, commit these files and any other changes to your repository:
+    After the script successfully generates `terraform/auto_generated_backend.tf` and `terraform/auto_generated_variables.tf`, commit these files and any other changes to your repository:
 
     ```bash
-    git add terraform/backend.tf terraform/variables.tf
+    git add terraform/auto_generated_backend.tf terraform/auto_generated_variables.tf
     git commit -m "Configure Terraform backend"
     git push origin main
     ```

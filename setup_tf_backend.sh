@@ -4,8 +4,8 @@ set -e # Salir inmediatamente si un comando termina con un estado no cero.
 # --- Configuration ---
 PRE_TERRAFORM_DIR="./00-tf-infra"
 APP_TERRAFORM_DIR="./01-tf"
-GENERATED_VARIABLES_TF_FILENAME="auto_variables.tf"
-GENERATED_BACKEND_TF_FILENAME="auto_backend.tf"
+GENERATED_VARIABLES_TF_FILENAME="auto_generated_variables.tf"
+GENERATED_BACKEND_TF_FILENAME="auto_generated_backend.tf"
 
 ECR_REPOSITORY_NAME="poc-hello-world"
 AWS_REGION_FOR_BACKEND_RESOURCES="us-east-1"
