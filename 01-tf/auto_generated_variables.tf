@@ -69,5 +69,5 @@ variable "app_image_uri" {
 variable "task_desired_count" {
   description = "Number of desired tasks to run"
   type        = number
-  default     = "3"
+  default     = "2"
 }
