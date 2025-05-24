@@ -1,9 +1,9 @@
 provider "aws" {
-  region = var.AWS_REGION
+  region = var.aws_region
 }
 
 resource "aws_ecr_repository" "app_ecr" {
-  name = var.ECR_REPOSITORY_NAME
+  name = "${var.project_name_prefix}/app-ecr"
 
   tags = {
     Environment = "dev"

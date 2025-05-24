@@ -5,5 +5,5 @@ output "ecr_repository_url" {
 
 output "aws_region_configured" {
   description = "The AWS region configured for the provider"
-  value       = var.AWS_REGION
+  value       = var.aws_region
 }

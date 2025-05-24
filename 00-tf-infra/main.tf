@@ -1,16 +1,15 @@
 provider "aws" {
-  region  = var.AWS_REGION
+  region  = var.aws_region
   profile = "my-dev-profile"
 }
 
-# Usamos el Account ID para asegurar nombres de bucket S3 únicos globalmente.
 data "aws_caller_identity" "current" {}
 
 resource "aws_s3_bucket" "terraform_state" {
-  bucket = "${var.PROJECT_NAME_PREFIX}-tfstate-${data.aws_caller_identity.current.account_id}-${var.AWS_REGION}"
+  bucket = "${var.project_name_prefix}-tfstate-${data.aws_caller_identity.current.account_id}-${var.aws_region}"
 
   tags = {
-    Name        = "${var.PROJECT_NAME_PREFIX}-terraform-state-bucket"
+    Name        = "${var.project_name_prefix}-terraform-state-bucket"
     Environment = "TerraformBackend"
     ManagedBy   = "Terraform"
   }
@@ -26,7 +25,7 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "terraform_state_e
   }
 }
 
-# Habilitar versionado para el historial de archivos de estado
+# activate versioning for the state bucket
 resource "aws_s3_bucket_versioning" "terraform_state_versioning" {
   bucket = aws_s3_bucket.terraform_state.id
   versioning_configuration {
@@ -35,9 +34,9 @@ resource "aws_s3_bucket_versioning" "terraform_state_versioning" {
 }
 
 resource "aws_dynamodb_table" "terraform_locks" {
-  name         = "${var.PROJECT_NAME_PREFIX}-terraform-lock-table"
-  billing_mode = "PAY_PER_REQUEST" # Rentable para uso infrecuente como bloqueos de TF
-  hash_key     = "LockID"          # La clave de partición DEBE ser "LockID"
+  name         = "${var.project_name_prefix}-terraform-lock-table"
+  billing_mode = "PAY_PER_REQUEST"
+  hash_key     = "LockID"
 
   attribute {
     name = "LockID"
@@ -45,7 +44,7 @@ resource "aws_dynamodb_table" "terraform_locks" {
   }
 
   tags = {
-    Name        = "${var.PROJECT_NAME_PREFIX}-terraform-lock-table"
+    Name        = "${var.project_name_prefix}-terraform-lock-table"
     Environment = "TerraformBackend"
     ManagedBy   = "Terraform"
   }

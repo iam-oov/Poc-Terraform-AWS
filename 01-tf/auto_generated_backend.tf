@@ -4,10 +4,10 @@
 
 terraform {
   backend "s3" {
-    bucket         = "poc-hello-world-tfstate-058264118467-us-east-1"
-    key            = "states/poc-hello-world/terraform.tfstate"
+    bucket         = "poc2-terraform-node-hw-tfstate-058264118467-us-east-1"
+    key            = "states/poc2-terraform-node-hw/terraform.tfstate"
     region         = "us-east-1"
-    dynamodb_table = "poc-hello-world-terraform-lock-table"
+    dynamodb_table = "poc2-terraform-node-hw-terraform-lock-table"
     encrypt        = true
   }
 }

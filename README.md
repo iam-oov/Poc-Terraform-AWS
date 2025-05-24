@@ -61,29 +61,6 @@ Before you begin, ensure you have the following installed and configured:
 
 Create an IAM Role in your AWS account that GitHub Actions can assume. This role needs permissions to manage ECR, S3 (for Terraform backend), and DynamoDB (for Terraform state lock table).
 
-- Follow the AWS documentation for [Configuring OpenID Connect in Amazon Web Services](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_providers_create_oidc.html).
-- The trust relationship for the IAM role should be configured for GitHub Actions. Example policy snippet:
-
-  ```json
-  {
-    "Version": "2012-10-17",
-    "Statement": [
-      {
-        "Effect": "Allow",
-        "Principal": {
-          "Federated": "arn:aws:iam::YOUR_AWS_ACCOUNT_ID:oidc-provider/token.actions.githubusercontent.com"
-        },
-        "Action": "sts:AssumeRoleWithWebIdentity",
-        "Condition": {
-          "StringLike": {
-            "token.actions.githubusercontent.com:sub": "repo:YOUR_GITHUB_USERNAME/YOUR_REPOSITORY_NAME:*"
-          }
-        }
-      }
-    ]
-  }
-  ```
-
 - Attach necessary permission policies to this role (e.g., `AmazonEC2ContainerRegistryFullAccess`, plus custom policies for S3 backend bucket creation/access and DynamoDB table creation/access if the setup script handles this).
 
 ### 2. Configure GitHub Secrets
