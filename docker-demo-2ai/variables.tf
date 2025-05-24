@@ -42,7 +42,7 @@ variable "app_image_uri" {
   description = "URI completa de la imagen Docker en ECR para la aplicación"
   type        = string
   # IMPORTANTE: Asegúrate de que este sea el URI correcto de tu imagen
-  default = "058264118467.dkr.ecr.us-east-1.amazonaws.com/myapp:latest"
+  default = "058264118467.dkr.ecr.us-east-1.amazonaws.com/myapp"
 }
 
 # --- Variables de ECS Fargate ---

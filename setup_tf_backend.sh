@@ -101,7 +101,7 @@ echo "--- Inicializando Terraform en '${PRE_TERRAFORM_DIR}' (usando backend loca
 terraform init -input=false
 
 echo "--- Aplicando cambios en '${PRE_TERRAFORM_DIR}' (para crear el bucket S3 y la tabla DynamoDB) ---"
-terraform apply -auto-approve -input=false"
+terraform apply -auto-approve -input=false
 
 echo "--- Obteniendo Outputs de Terraform desde '${PRE_TERRAFORM_DIR}' ---"
 TF_OUTPUT_S3_BUCKET_VALUE=$(terraform output -raw "${S3_BUCKET_OUTPUT_NAME}")
@@ -170,6 +170,64 @@ variable "project_name_prefix" {
   description = "Prefix for the names of the aws resources to ensure uniqueness."
   type        = string
   default     = "${PROJECT_NAME_PREFIX}"
+}
+
+variable "common_tags" {
+  description = "Tags to be applied to all resources"
+  type        = map(string)
+  default = {
+    Project     = "${PROJECT_NAME_PREFIX}"
+    Terraform   = "true"
+    Environment = "dev"
+  }
+}
+
+variable "vpc_cidr" {
+  description = "CIDR block for the VPC"
+  type        = string
+  default     = "10.0.0.0/16"
+}
+
+variable "app_port" {
+  description = "Port on which the application inside the container listens"
+  type        = number
+  default     = "${APP_PORT}"
+}
+
+variable "health_check_path" {
+  description = "Path to be used for health checks"
+  type        = string
+  default     = "${HEALTH_CHECK_PATH}"
+}
+
+variable "log_retention_days" {
+  description = "Number of days to retain logs in CloudWatch"
+  type        = number
+  default     = "${LOG_RETENTION_DAYS_IN_CLOUDWATCH}"
+}
+
+variable "fargate_cpu" {
+  description = "Number of vCPUs for the Fargate task"
+  type        = string
+  default     = "${FARGATE_CPU}"
+}
+
+variable "fargate_memory" {
+  description = "Amount of memory in MiB for the Fargate task"
+  type        = string
+  default     = "${FARGATE_MEMORY}"
+}
+
+variable "app_image_uri" {
+  description = "The full URI of the Docker image in ECR"
+  type        = string
+  default     = "nginx:latest"
+}
+
+variable "task_desired_count" {
+  description = "Number of desired tasks to run"
+  type        = number
+  default     = "${TASK_DESIRED_COUNT}"
 }
 EOL
 

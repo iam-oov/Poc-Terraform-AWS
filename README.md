@@ -63,12 +63,35 @@ Create an IAM Role in your AWS account that GitHub Actions can assume. This role
 
 - Attach necessary permission policies to this role (e.g., `AmazonEC2ContainerRegistryFullAccess`, plus custom policies for S3 backend bucket creation/access and DynamoDB table creation/access if the setup script handles this).
 
+### 1.1 Configure Environment Variables
+
+Modify the `.env` file in the root directory with your values (in case you want to change the default values).
+
 ### 2. Configure GitHub Secrets
 
 In your GitHub repository, navigate to `Settings > Secrets and variables > Actions` and add the following secrets:
 
 - `AWS_REGION`: Your AWS region (e.g., `us-east-1`).
 - `AWS_IAM_ROLE_ARN`: The ARN of the IAM role created in the previous step (e.g., `arn:aws:iam::YOUR_AWS_ACCOUNT_ID:role/YOUR_IAM_ROLE_NAME`).
+
+And add the following variables:
+
+- `TERRAFORM_DIR`: The path to the directory where the Terraform configuration files are stored (e.g., `./01-tf`).
+
+### 3. Terraform Backend Setup Script
+
+The `setup_tf_backend.sh` script automates the creation of the S3 bucket and DynamoDB table for the Terraform backend and generates the necessary Terraform configuration files.
+
+### 2. Configure GitHub Secrets
+
+In your GitHub repository, navigate to `Settings > Secrets and variables > Actions` and add the following secrets:
+
+- `AWS_REGION`: Your AWS region (e.g., `us-east-1`).
+- `AWS_IAM_ROLE_ARN`: The ARN of the IAM role created in the previous step (e.g., `arn:aws:iam::YOUR_AWS_ACCOUNT_ID:role/YOUR_IAM_ROLE_NAME`).
+
+And add the following variables:
+
+- `TERRAFORM_DIR`: The path to the directory where the Terraform configuration files are stored (e.g., `./01-tf`).
 
 ### 3. Terraform Backend Setup Script
 

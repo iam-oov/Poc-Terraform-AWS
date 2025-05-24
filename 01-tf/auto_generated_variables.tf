@@ -13,3 +13,61 @@ variable "project_name_prefix" {
   type        = string
   default     = "poc2-terraform-node-hw"
 }
+
+variable "common_tags" {
+  description = "Tags to be applied to all resources"
+  type        = map(string)
+  default = {
+    Project     = "poc2-terraform-node-hw"
+    Terraform   = "true"
+    Environment = "dev"
+  }
+}
+
+variable "vpc_cidr" {
+  description = "CIDR block for the VPC"
+  type        = string
+  default     = "10.0.0.0/16"
+}
+
+variable "app_port" {
+  description = "Port on which the application inside the container listens"
+  type        = number
+  default     = "3011"
+}
+
+variable "health_check_path" {
+  description = "Path to be used for health checks"
+  type        = string
+  default     = "/"
+}
+
+variable "log_retention_days" {
+  description = "Number of days to retain logs in CloudWatch"
+  type        = number
+  default     = "3"
+}
+
+variable "fargate_cpu" {
+  description = "Number of vCPUs for the Fargate task"
+  type        = string
+  default     = "1024"
+}
+
+variable "fargate_memory" {
+  description = "Amount of memory in MiB for the Fargate task"
+  type        = string
+  default     = "2048"
+}
+
+variable "app_image_uri" {
+  description = "The full URI of the Docker image in ECR"
+  type        = string
+  default     = "nginx:latest"
+}
+
+variable "task_desired_count" {
+  description = "Number of desired tasks to run"
+  type        = number
+  default     = "3"
+}
