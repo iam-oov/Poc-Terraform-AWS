@@ -69,9 +69,7 @@ jobs:
           context: .
           file: ./Dockerfile
           push: true
-          tags: | # Allow multiple tags
-            ${{ env.ECR_REPOSITORY_URL }}:${{ env.IMAGE_TAG }}
-            ${{ env.ECR_REPOSITORY_URL }}:latest
+          tags: ${{ env.ECR_REPOSITORY_URL }}:latest
 
       # Second Apply: Update ECS with new image
       - name: Terraform Apply (Update ECS with new image)
