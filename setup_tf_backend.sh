@@ -101,7 +101,7 @@ echo "--- Inicializando Terraform en '${PRE_TERRAFORM_DIR}' (usando backend loca
 terraform init -input=false
 
 echo "--- Aplicando cambios en '${PRE_TERRAFORM_DIR}' (para crear el bucket S3 y la tabla DynamoDB) ---"
-terraform apply -auto-approve -input=false -var="aws_region=${AWS_REGION}"
+terraform apply -auto-approve -input=false"
 
 echo "--- Obteniendo Outputs de Terraform desde '${PRE_TERRAFORM_DIR}' ---"
 TF_OUTPUT_S3_BUCKET_VALUE=$(terraform output -raw "${S3_BUCKET_OUTPUT_NAME}")
